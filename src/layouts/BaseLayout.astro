@@ -20,7 +20,7 @@ const { title, description } = Astro.props;
   <meta property="og:url" content="https://kwalis.ai" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>K</text></svg>" />
   <link rel="preconnect" href="https://api.fontshare.com" />
-  <link href="https://api.fontshare.com/v2/css?f[]=outfit@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=instrument-serif@400;400-italic&f[]=satoshi@300;400;500;700&display=swap" rel="stylesheet" />
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -36,23 +36,25 @@ const { title, description } = Astro.props;
   }
 
   :root {
-    --bg: #08090d;
-    --bg-subtle: #0e1017;
-    --bg-card: #121420;
+    --bg: #09090b;
+    --bg-subtle: #111113;
+    --bg-card: #18181a;
     --border: rgba(255, 255, 255, 0.06);
-    --border-hover: rgba(255, 255, 255, 0.12);
-    --text: #e4e5ea;
-    --text-muted: #8a8d9c;
-    --text-dim: #4e5165;
-    --accent: #7b9aff;
-    --accent-bright: #94adff;
-    --accent-dim: rgba(123, 154, 255, 0.1);
-    --accent-glow: rgba(123, 154, 255, 0.25);
+    --border-hover: rgba(255, 255, 255, 0.14);
+    --text: #ededec;
+    --text-muted: #a1a09e;
+    --text-dim: #5c5b58;
+    --accent: #d4a574;
+    --accent-bright: #e0b88a;
+    --accent-dim: rgba(212, 165, 116, 0.08);
+    --accent-glow: rgba(212, 165, 116, 0.2);
     --max-w: 960px;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'Satoshi', system-ui, -apple-system, sans-serif;
   }
 
   body {
-    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
     color: var(--text);
     background: var(--bg);
     line-height: 1.6;
@@ -64,4 +66,60 @@ const { title, description } = Astro.props;
     background: var(--accent-dim);
     color: var(--accent-bright);
   }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered children */
+  .stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+  .stagger.visible > *:nth-child(2) { transition-delay: 0.07s; }
+  .stagger.visible > *:nth-child(3) { transition-delay: 0.14s; }
+  .stagger.visible > *:nth-child(4) { transition-delay: 0.21s; }
+  .stagger.visible > *:nth-child(5) { transition-delay: 0.28s; }
+  .stagger.visible > *:nth-child(6) { transition-delay: 0.35s; }
+  .stagger.visible > *:nth-child(7) { transition-delay: 0.42s; }
+
+  .stagger.visible > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hero entrance */
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-enter {
+    opacity: 0;
+    animation: hero-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .hero-enter-d1 { animation-delay: 0.1s; }
+  .hero-enter-d2 { animation-delay: 0.25s; }
+  .hero-enter-d3 { animation-delay: 0.4s; }
+  .hero-enter-d4 { animation-delay: 0.55s; }
 </style>

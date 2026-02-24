@@ -44,31 +44,29 @@ const principles = [
   description="Kwalis is building the semantic memory layer for agentic AI. Structured memory that makes agents coherent over time."
 >
 
-  <!-- Background grid pattern -->
-  <div class="bg-grid" aria-hidden="true"></div>
+  <!-- Ambient background -->
+  <div class="bg-glow" aria-hidden="true"></div>
 
-  <nav>
+  <nav class="hero-enter hero-enter-d1">
     <span class="logo">Kwalis</span>
   </nav>
 
   <section class="hero">
     <div class="hero-content">
-      <h1>
+      <p class="hero-eyebrow hero-enter hero-enter-d1">Semantic memory for agentic AI</p>
+      <h1 class="hero-enter hero-enter-d2">
         The memory layer that makes AI agents
-        <span class="gradient-text">coherent over time.</span>
+        <em class="gradient-text">coherent over time.</em>
       </h1>
-      <p class="hero-sub">
+      <p class="hero-sub hero-enter hero-enter-d3">
         AI agents don't fail because they lack intelligence.<br />
         They fail because they lack memory that preserves meaning.
       </p>
-      <div class="hero-cta">
-        <EmailSignup />
-      </div>
     </div>
   </section>
 
-  <section class="pullquote">
-    <div class="pullquote-bar"></div>
+  <section class="pullquote hero-enter hero-enter-d4">
+    <div class="pullquote-rule"></div>
     <div class="phrases">
       <div class="phrases-track">
         <span>The problem isn't scale. It's meaning.</span>
@@ -80,7 +78,7 @@ const principles = [
 
   <div class="divider"><hr /></div>
 
-  <section class="problem">
+  <section class="problem reveal">
     <p class="section-label">The problem</p>
     <h2>
       What we call "memory" in AI today is retrieval, embeddings, and summaries.
@@ -92,9 +90,9 @@ const principles = [
 
   <div class="divider"><hr /></div>
 
-  <section class="principles">
+  <section class="principles reveal">
     <p class="section-label">What we believe</p>
-    <ol class="principles-list">
+    <ol class="principles-list stagger">
       {principles.map((p, i) => (
         <li class="principle">
           <span class="principle-num">{String(i + 1).padStart(2, '0')}</span>
@@ -107,9 +105,13 @@ const principles = [
     </ol>
   </section>
 
+  <section class="cta reveal">
+    <EmailSignup />
+  </section>
+
   <div class="divider"><hr /></div>
 
-  <section class="contact">
+  <section class="contact reveal">
     <p>
       We're building the semantic substrate for agentic AI.<br />
       If this resonates, reach out at <a href="mailto:contact@kwalis.ai">contact@kwalis.ai</a>
@@ -123,34 +125,49 @@ const principles = [
 
 </BaseLayout>
 
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+  );
+
+  document.querySelectorAll('.reveal, .stagger').forEach((el) => observer.observe(el));
+</script>
+
 <style>
-  /* --- Background --- */
-  .bg-grid {
+  /* --- Ambient background --- */
+  .bg-glow {
     position: fixed;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 64px 64px;
     pointer-events: none;
     z-index: 0;
-    mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 20%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 20%, transparent 100%);
+    background:
+      radial-gradient(ellipse 50% 40% at 20% 20%, rgba(212, 165, 116, 0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 80% 60%, rgba(212, 165, 116, 0.025) 0%, transparent 70%);
   }
 
   /* --- Nav --- */
   nav {
     position: relative;
     z-index: 1;
-    padding: 2.5rem 2rem 0;
+    padding: 2.5rem 2rem 2rem;
     max-width: var(--max-w);
     margin: 0 auto;
   }
 
   .logo {
-    font-size: 1.3rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--text);
   }
 
@@ -158,7 +175,9 @@ const principles = [
   .hero {
     position: relative;
     z-index: 1;
-    min-height: 80vh;
+    min-height: auto;
+    padding-top: 12vh;
+    padding-bottom: 3rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -167,30 +186,29 @@ const principles = [
     margin: 0 auto;
   }
 
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 5%;
-    left: -30%;
-    width: 70%;
-    height: 70%;
-    background: radial-gradient(ellipse, var(--accent-dim) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: -1;
-    filter: blur(40px);
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 2rem;
   }
 
   h1 {
-    font-size: clamp(2.4rem, 5.5vw, 4rem);
-    font-weight: 600;
-    line-height: 1.12;
-    margin-bottom: 1.75rem;
-    max-width: 720px;
-    letter-spacing: -0.025em;
+    font-family: var(--font-serif);
+    font-size: clamp(2.6rem, 5.8vw, 4.4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    max-width: 740px;
+    letter-spacing: -0.01em;
+    color: var(--text);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 50%, #c4b5fd 100%);
+    font-style: italic;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 60%, #e8cba8 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -200,12 +218,8 @@ const principles = [
     font-size: 1.15rem;
     font-weight: 300;
     color: var(--text-muted);
-    max-width: 480px;
-    line-height: 1.75;
-  }
-
-  .hero-cta {
-    margin-top: 3rem;
+    max-width: 500px;
+    line-height: 1.8;
   }
 
   /* --- Pullquote --- */
@@ -214,18 +228,19 @@ const principles = [
     z-index: 1;
     max-width: var(--max-w);
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 2rem 2rem 3rem;
     display: flex;
     align-items: center;
     gap: 1.5rem;
   }
 
-  .pullquote-bar {
-    width: 3px;
+  .pullquote-rule {
+    width: 2px;
     height: 2.4rem;
     background: var(--accent);
-    border-radius: 2px;
+    border-radius: 1px;
     flex-shrink: 0;
+    opacity: 0.6;
   }
 
   .phrases {
@@ -241,6 +256,7 @@ const principles = [
     display: block;
     height: 2.4rem;
     line-height: 2.4rem;
+    font-family: var(--font-serif);
     font-size: clamp(1.1rem, 2.2vw, 1.4rem);
     font-weight: 400;
     font-style: italic;
@@ -270,41 +286,43 @@ const principles = [
 
   /* --- Section label --- */
   .section-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--text-dim);
+    letter-spacing: 0.14em;
+    color: var(--accent);
     margin-bottom: 2.5rem;
+    opacity: 0.8;
   }
 
   /* --- Problem --- */
   .problem {
     position: relative;
     z-index: 1;
-    padding: 5rem 2rem;
+    padding: 3.5rem 2rem;
     max-width: var(--max-w);
     margin: 0 auto;
   }
 
   .problem h2 {
-    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 2.8vw, 2.1rem);
     font-weight: 400;
-    line-height: 1.55;
-    max-width: 640px;
+    line-height: 1.5;
+    max-width: 660px;
     color: var(--text-muted);
   }
 
   .problem h2 strong {
     color: var(--text);
-    font-weight: 500;
+    font-weight: 400;
   }
 
   /* --- Principles --- */
   .principles {
     position: relative;
     z-index: 1;
-    padding: 5rem 2rem;
+    padding: 3.5rem 2rem;
     max-width: var(--max-w);
     margin: 0 auto;
   }
@@ -318,10 +336,10 @@ const principles = [
   .principle {
     display: flex;
     align-items: baseline;
-    gap: 1.5rem;
-    padding: 1.5rem 0;
+    gap: 2rem;
+    padding: 1.75rem 0;
     border-bottom: 1px solid var(--border);
-    transition: border-color 0.2s ease;
+    transition: border-color 0.3s ease;
   }
 
   .principle:first-child {
@@ -336,25 +354,33 @@ const principles = [
     border-top-color: var(--border-hover);
   }
 
+  .principle:hover .principle-num {
+    opacity: 1;
+  }
+
   .principle-num {
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-style: italic;
     color: var(--accent);
-    letter-spacing: 0.05em;
     flex-shrink: 0;
-    padding-top: 0.15rem;
+    padding-top: 0.1rem;
     font-variant-numeric: tabular-nums;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    min-width: 1.8rem;
   }
 
   .principle-content {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.4rem;
   }
 
   .principle-content strong {
-    font-size: 1.05rem;
-    font-weight: 500;
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 400;
     color: var(--text);
   }
 
@@ -362,14 +388,23 @@ const principles = [
     font-size: 0.9rem;
     font-weight: 300;
     color: var(--text-muted);
-    line-height: 1.55;
+    line-height: 1.6;
+  }
+
+  /* --- CTA --- */
+  .cta {
+    position: relative;
+    z-index: 1;
+    padding: 3rem 2rem;
+    max-width: var(--max-w);
+    margin: 0 auto;
   }
 
   /* --- Contact --- */
   .contact {
     position: relative;
     z-index: 1;
-    padding: 5rem 2rem 3rem;
+    padding: 3rem 2rem 2rem;
     max-width: var(--max-w);
     margin: 0 auto;
     text-align: center;
@@ -379,7 +414,7 @@ const principles = [
     font-size: 1.05rem;
     font-weight: 300;
     color: var(--text-muted);
-    line-height: 1.75;
+    line-height: 1.8;
   }
 
   .contact a {
@@ -387,10 +422,12 @@ const principles = [
     text-decoration: none;
     font-weight: 400;
     transition: color 0.2s ease;
+    border-bottom: 1px solid transparent;
   }
 
   .contact a:hover {
     color: var(--accent-bright);
+    border-bottom-color: var(--accent-bright);
   }
 
   /* --- Footer --- */
@@ -420,7 +457,12 @@ const principles = [
 
     .hero {
       padding: 0 1.5rem;
-      min-height: 70vh;
+      min-height: 72vh;
+    }
+
+    .pullquote {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
     }
 
     .problem,
@@ -431,7 +473,7 @@ const principles = [
     }
 
     .principle {
-      gap: 1rem;
+      gap: 1.2rem;
     }
   }
 </style>
