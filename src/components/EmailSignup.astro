@@ -18,51 +18,43 @@
       <span class="button-icon">&rarr;</span>
     </button>
   </form>
-  <div id="turnstile-container"></div>
+  <div class="turnstile-wrap">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAAChl2EluFWwGeDcU" data-theme="dark" data-callback="onTurnstileSuccess"></div>
+  </div>
   <p class="signup-note">No spam. One email when it matters.</p>
   <p class="signup-error" data-signup-error>Something went wrong. Try again?</p>
   <p class="signup-success" data-signup-success>Thanks — we'll be in touch.</p>
 </div>
+
+<script is:inline>
+  var turnstileToken = '';
+  function onTurnstileSuccess(token) { turnstileToken = token; }
+</script>
 
 <script>
   const form = document.querySelector('[data-signup-form]') as HTMLFormElement;
   const success = document.querySelector('[data-signup-success]') as HTMLElement;
   const error = document.querySelector('[data-signup-error]') as HTMLElement;
   const button = form?.querySelector('button') as HTMLButtonElement;
-  const container = document.getElementById('turnstile-container')!;
-
-  const SITE_KEY = '0x4AAAAAAChl2EluFWwGeDcU';
-
-  function getTurnstileToken(): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const turnstile = (window as any).turnstile;
-      if (!turnstile) { reject(new Error('Turnstile not loaded')); return; }
-
-      container.innerHTML = '';
-      turnstile.render(container, {
-        sitekey: SITE_KEY,
-        appearance: 'interaction-only',
-        callback: (token: string) => resolve(token),
-        'error-callback': () => reject(new Error('Verification failed')),
-      });
-    });
-  }
 
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     error.style.display = 'none';
 
+    const token = (window as any).turnstileToken;
+    if (!token) {
+      error.textContent = 'Verification loading, try again in a moment.';
+      error.style.display = 'block';
+      return;
+    }
+
     const data = new FormData(form);
     const email = data.get('email') as string;
 
     button.disabled = true;
-    button.querySelector('.button-text')!.textContent = 'Verifying...';
+    button.querySelector('.button-text')!.textContent = 'Sending...';
 
     try {
-      const token = await getTurnstileToken();
-
-      button.querySelector('.button-text')!.textContent = 'Sending...';
-
       const res = await fetch('/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -72,15 +64,16 @@
       if (!res.ok) throw new Error();
 
       form.style.display = 'none';
-      container.innerHTML = '';
       document.querySelector('.signup-note')!.remove();
+      document.querySelector('.turnstile-wrap')!.remove();
       success.style.display = 'block';
     } catch {
       button.disabled = false;
       button.querySelector('.button-text')!.textContent = 'Notify me';
       error.textContent = 'Something went wrong. Try again?';
       error.style.display = 'block';
-      container.innerHTML = '';
+      (window as any).turnstile?.reset();
+      (window as any).turnstileToken = '';
     }
   });
 </script>
@@ -178,6 +171,14 @@
   .signup-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  .turnstile-wrap {
+    position: absolute;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    clip: rect(0, 0, 0, 0);
   }
 
   @media (max-width: 480px) {
