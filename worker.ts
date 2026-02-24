@@ -4,6 +4,8 @@ interface Env {
   TURNSTILE_SECRET: string;
 }
 
+const ALLOWED_ORIGIN = 'https://kwalis.ai';
+
 async function verifyTurnstile(token: string, secret: string, ip: string): Promise<boolean> {
   const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method: 'POST',
@@ -19,67 +21,81 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === '/api/signup') {
+      const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+      };
+
       if (request.method === 'OPTIONS') {
         return new Response(null, {
           headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type',
           },
         });
       }
 
-      if (request.method === 'POST') {
-        const headers = {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        };
+      if (request.method !== 'POST') {
+        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+          status: 405,
+          headers: { ...headers, Allow: 'POST, OPTIONS' },
+        });
+      }
 
-        try {
-          const body = await request.json<{ email: string; token: string }>();
-          const email = body.email?.trim().toLowerCase();
-          const token = body.token;
+      let body: { email?: string; token?: string };
+      try {
+        body = await request.json<{ email: string; token: string }>();
+      } catch {
+        return new Response(JSON.stringify({ error: 'Invalid request body' }), {
+          status: 400,
+          headers,
+        });
+      }
 
-          if (!token) {
-            return new Response(JSON.stringify({ error: 'Verification required' }), {
-              status: 400,
-              headers,
-            });
-          }
+      try {
+        const email = body.email?.trim().toLowerCase();
+        const token = body.token;
 
-          const ip = request.headers.get('CF-Connecting-IP') || '';
-          const valid = await verifyTurnstile(token, env.TURNSTILE_SECRET, ip);
-
-          if (!valid) {
-            return new Response(JSON.stringify({ error: 'Verification failed' }), {
-              status: 403,
-              headers,
-            });
-          }
-
-          if (!email || !email.includes('@') || email.length > 320) {
-            return new Response(JSON.stringify({ error: 'Invalid email' }), {
-              status: 400,
-              headers,
-            });
-          }
-
-          await env.DB.prepare(
-            'INSERT OR IGNORE INTO signups (email, created_at) VALUES (?, ?)'
-          )
-            .bind(email, new Date().toISOString())
-            .run();
-
-          return new Response(JSON.stringify({ ok: true }), {
-            status: 200,
-            headers,
-          });
-        } catch {
-          return new Response(JSON.stringify({ error: 'Something went wrong' }), {
-            status: 500,
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320) {
+          return new Response(JSON.stringify({ error: 'Invalid email' }), {
+            status: 400,
             headers,
           });
         }
+
+        if (!token) {
+          return new Response(JSON.stringify({ error: 'Verification required' }), {
+            status: 400,
+            headers,
+          });
+        }
+
+        const ip = request.headers.get('CF-Connecting-IP') || '';
+        const valid = await verifyTurnstile(token, env.TURNSTILE_SECRET, ip);
+
+        if (!valid) {
+          return new Response(JSON.stringify({ error: 'Verification failed' }), {
+            status: 403,
+            headers,
+          });
+        }
+
+        await env.DB.prepare(
+          'INSERT OR IGNORE INTO signups (email, created_at) VALUES (?, ?)'
+        )
+          .bind(email, new Date().toISOString())
+          .run();
+
+        return new Response(JSON.stringify({ ok: true }), {
+          status: 200,
+          headers,
+        });
+      } catch {
+        return new Response(JSON.stringify({ error: 'Something went wrong' }), {
+          status: 500,
+          headers,
+        });
       }
     }
 
