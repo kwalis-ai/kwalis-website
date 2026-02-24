@@ -1,6 +1,15 @@
 ---
+import { execSync } from 'node:child_process';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EmailSignup from '../components/EmailSignup.astro';
+
+const gitHash = (() => {
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch {
+    return 'dev';
+  }
+})();
 
 const principles = [
   {
@@ -108,7 +117,8 @@ const principles = [
   </section>
 
   <footer>
-    &copy; 2025 Kwalis
+    <span>&copy; 2026 Kwalis</span>
+    <span class="build-hash" title={`Build: ${gitHash}`}>{gitHash}</span>
   </footer>
 
 </BaseLayout>
@@ -391,6 +401,15 @@ const principles = [
     text-align: center;
     font-size: 0.8rem;
     color: var(--text-dim);
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .build-hash {
+    font-family: monospace;
+    font-size: 0.7rem;
+    opacity: 0.4;
   }
 
   /* --- Responsive --- */
