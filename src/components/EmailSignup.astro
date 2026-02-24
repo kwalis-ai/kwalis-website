@@ -1,0 +1,136 @@
+---
+
+---
+
+<div class="signup">
+  <p class="signup-label">Get notified when we launch</p>
+  <form class="signup-form" data-signup-form>
+    <input
+      type="email"
+      name="email"
+      placeholder="you@example.com"
+      required
+      autocomplete="email"
+      class="signup-input"
+    />
+    <button type="submit" class="signup-button">
+      <span class="button-text">Notify me</span>
+      <span class="button-icon">&rarr;</span>
+    </button>
+  </form>
+  <p class="signup-note">No spam. One email when it matters.</p>
+  <p class="signup-success" data-signup-success>Thanks — we'll be in touch.</p>
+</div>
+
+<script>
+  const form = document.querySelector('[data-signup-form]') as HTMLFormElement;
+  const success = document.querySelector('[data-signup-success]') as HTMLElement;
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    const email = data.get('email');
+
+    // TODO: Wire to your email service (Buttondown, ConvertKit, etc.)
+    // For now, log and show success state
+    console.log('Signup:', email);
+
+    form.style.display = 'none';
+    success.style.display = 'block';
+  });
+</script>
+
+<style>
+  .signup {
+    text-align: center;
+  }
+
+  .signup-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 1.25rem;
+  }
+
+  .signup-form {
+    display: flex;
+    gap: 0;
+    max-width: 420px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+    background: var(--bg-subtle);
+  }
+
+  .signup-form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim), 0 0 20px var(--accent-dim);
+  }
+
+  .signup-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 300;
+    outline: none;
+  }
+
+  .signup-input::placeholder {
+    color: var(--text-dim);
+  }
+
+  .signup-button {
+    padding: 0.8rem 1.4rem;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .signup-button:hover {
+    background: var(--accent-bright);
+  }
+
+  .signup-note {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--text-dim);
+  }
+
+  .signup-success {
+    display: none;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--accent);
+    padding: 0.8rem 0;
+  }
+
+  @media (max-width: 480px) {
+    .signup-form {
+      flex-direction: column;
+      border-radius: 8px;
+    }
+
+    .signup-button {
+      justify-content: center;
+      border-top: 1px solid var(--border);
+    }
+  }
+</style>

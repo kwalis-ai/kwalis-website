@@ -1,0 +1,418 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+
+const principles = [
+  {
+    title: 'Context is localized',
+    body: 'No global memory blob. Knowledge exists relative to a focus.',
+  },
+  {
+    title: 'Understanding is compositional',
+    body: 'Explanations are structural objects with explicit interfaces, not text chains.',
+  },
+  {
+    title: 'Judgment is explicit',
+    body: 'Evidence and constraints are first-class and auditable.',
+  },
+  {
+    title: 'Commitment is stabilization',
+    body: 'What an agent knows is what remains invariant under admissible change.',
+  },
+  {
+    title: 'Learning is conservative',
+    body: 'Assumptions weaken only when necessary, and only as much as required.',
+  },
+  {
+    title: 'Curiosity is principled',
+    body: 'Exploration is driven by reducible uncertainty, not arbitrary incentives.',
+  },
+];
+---
+
+<BaseLayout
+  title="Kwalis — Semantic Memory for Agentic AI"
+  description="Kwalis is building the semantic memory layer for agentic AI. Structured memory that makes agents coherent over time."
+>
+
+  <!-- Background grid pattern -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <nav>
+    <span class="logo">Kwalis</span>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>
+        The memory layer that makes AI agents
+        <span class="gradient-text">coherent over time.</span>
+      </h1>
+      <p class="hero-sub">
+        AI agents don't fail because they lack intelligence.<br />
+        They fail because they lack memory that preserves meaning.
+      </p>
+      <div class="hero-cta">
+        <EmailSignup />
+      </div>
+    </div>
+  </section>
+
+  <section class="pullquote">
+    <div class="pullquote-bar"></div>
+    <div class="phrases">
+      <div class="phrases-track">
+        <span>The problem isn't scale. It's meaning.</span>
+        <span>Autonomy without memory is just automated amnesia.</span>
+        <span>A bigger window doesn't fix a broken view.</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><hr /></div>
+
+  <section class="problem">
+    <p class="section-label">The problem</p>
+    <h2>
+      What we call "memory" in AI today is retrieval, embeddings, and summaries.
+      What we call "learning" is fine-tuning or prompt accretion.
+      <strong>These break down the moment agents become long-running or autonomous.</strong>
+      The core problem is not scale. It is meaning.
+    </h2>
+  </section>
+
+  <div class="divider"><hr /></div>
+
+  <section class="principles">
+    <p class="section-label">What we believe</p>
+    <ol class="principles-list">
+      {principles.map((p, i) => (
+        <li class="principle">
+          <span class="principle-num">{String(i + 1).padStart(2, '0')}</span>
+          <div class="principle-content">
+            <strong>{p.title}</strong>
+            <span>{p.body}</span>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <div class="divider"><hr /></div>
+
+  <section class="contact">
+    <p>
+      We're building the semantic substrate for agentic AI.<br />
+      If this resonates, reach out at <a href="mailto:contact@kwalis.ai">contact@kwalis.ai</a>
+    </p>
+  </section>
+
+  <footer>
+    &copy; 2025 Kwalis
+  </footer>
+
+</BaseLayout>
+
+<style>
+  /* --- Background --- */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 20%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 20%, transparent 100%);
+  }
+
+  /* --- Nav --- */
+  nav {
+    position: relative;
+    z-index: 1;
+    padding: 2.5rem 2rem 0;
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text);
+  }
+
+  /* --- Hero --- */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2rem;
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 5%;
+    left: -30%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(ellipse, var(--accent-dim) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(40px);
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 600;
+    line-height: 1.12;
+    margin-bottom: 1.75rem;
+    max-width: 720px;
+    letter-spacing: -0.025em;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 50%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 480px;
+    line-height: 1.75;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+  }
+
+  /* --- Pullquote --- */
+  .pullquote {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .pullquote-bar {
+    width: 3px;
+    height: 2.4rem;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .phrases {
+    height: 2.4rem;
+    overflow: hidden;
+  }
+
+  .phrases-track {
+    animation: rotate-phrases 12s ease-in-out infinite;
+  }
+
+  .phrases-track span {
+    display: block;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  @keyframes rotate-phrases {
+    0%, 28%   { transform: translateY(0); }
+    33%, 61%  { transform: translateY(-2.4rem); }
+    66%, 94%  { transform: translateY(-4.8rem); }
+    100%      { transform: translateY(0); }
+  }
+
+  /* --- Divider --- */
+  .divider {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .divider hr {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* --- Section label --- */
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 2.5rem;
+  }
+
+  /* --- Problem --- */
+  .problem {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  .problem h2 {
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-weight: 400;
+    line-height: 1.55;
+    max-width: 640px;
+    color: var(--text-muted);
+  }
+
+  .problem h2 strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* --- Principles --- */
+  .principles {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: var(--max-w);
+    margin: 0 auto;
+  }
+
+  .principles-list {
+    list-style: none;
+    display: grid;
+    gap: 0;
+  }
+
+  .principle {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: border-color 0.2s ease;
+  }
+
+  .principle:first-child {
+    border-top: 1px solid var(--border);
+  }
+
+  .principle:hover {
+    border-color: var(--border-hover);
+  }
+
+  .principle:hover + .principle {
+    border-top-color: var(--border-hover);
+  }
+
+  .principle-num {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    padding-top: 0.15rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .principle-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .principle-content strong {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .principle-content span {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* --- Contact --- */
+  .contact {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem 3rem;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .contact p {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+
+  .contact a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.2s ease;
+  }
+
+  .contact a:hover {
+    color: var(--accent-bright);
+  }
+
+  /* --- Footer --- */
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 640px) {
+    nav {
+      padding: 1.5rem 1.5rem 0;
+    }
+
+    .hero {
+      padding: 0 1.5rem;
+      min-height: 70vh;
+    }
+
+    .problem,
+    .principles,
+    .contact {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .principle {
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content="The memory layer that makes AI agents coherent over time." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kwalis.ai" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>K</text></svg>" />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link href="https://api.fontshare.com/v2/css?f[]=outfit@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <slot />
+</body>
+</html>
+
+<style is:global>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --bg: #08090d;
+    --bg-subtle: #0e1017;
+    --bg-card: #121420;
+    --border: rgba(255, 255, 255, 0.06);
+    --border-hover: rgba(255, 255, 255, 0.12);
+    --text: #e4e5ea;
+    --text-muted: #8a8d9c;
+    --text-dim: #4e5165;
+    --accent: #7b9aff;
+    --accent-bright: #94adff;
+    --accent-dim: rgba(123, 154, 255, 0.1);
+    --accent-glow: rgba(123, 154, 255, 0.25);
+    --max-w: 960px;
+  }
+
+  body {
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--accent-dim);
+    color: var(--accent-bright);
+  }
+</style>
