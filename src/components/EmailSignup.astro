@@ -19,24 +19,43 @@
     </button>
   </form>
   <p class="signup-note">No spam. One email when it matters.</p>
+  <p class="signup-error" data-signup-error>Something went wrong. Try again?</p>
   <p class="signup-success" data-signup-success>Thanks — we'll be in touch.</p>
 </div>
 
 <script>
   const form = document.querySelector('[data-signup-form]') as HTMLFormElement;
   const success = document.querySelector('[data-signup-success]') as HTMLElement;
+  const error = document.querySelector('[data-signup-error]') as HTMLElement;
+  const button = form?.querySelector('button') as HTMLButtonElement;
 
-  form?.addEventListener('submit', (e) => {
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
+    error.style.display = 'none';
+
     const data = new FormData(form);
-    const email = data.get('email');
+    const email = data.get('email') as string;
 
-    // TODO: Wire to your email service (Buttondown, ConvertKit, etc.)
-    // For now, log and show success state
-    console.log('Signup:', email);
+    button.disabled = true;
+    button.querySelector('.button-text')!.textContent = 'Sending...';
 
-    form.style.display = 'none';
-    success.style.display = 'block';
+    try {
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) throw new Error();
+
+      form.style.display = 'none';
+      document.querySelector('.signup-note')!.remove();
+      success.style.display = 'block';
+    } catch {
+      button.disabled = false;
+      button.querySelector('.button-text')!.textContent = 'Notify me';
+      error.style.display = 'block';
+    }
   });
 </script>
 
@@ -114,12 +133,25 @@
     color: var(--text-dim);
   }
 
+  .signup-error {
+    display: none;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #f87171;
+  }
+
   .signup-success {
     display: none;
     font-size: 1rem;
     font-weight: 400;
     color: var(--accent);
     padding: 0.8rem 0;
+  }
+
+  .signup-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   @media (max-width: 480px) {

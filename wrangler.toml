@@ -1,0 +1,7 @@
+name = "kwalis-website"
+compatibility_date = "2024-12-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kwalis-signups"
+database_id = "464e9790-b9ef-460d-a480-235d9484fa07"
