@@ -49,6 +49,10 @@ To query signups:
 npx wrangler d1 execute kwalis-signups --remote --command "SELECT * FROM signups"
 ```
 
+## MCP Servers
+
+This project uses the **Cloudflare MCP server** for managing Workers, D1, KV, and other Cloudflare resources directly from Claude Code. If Cloudflare MCP tools are not available in the current session, ask the user to install the Cloudflare MCP server from the Claude marketplace (Settings > MCP Servers).
+
 ## Kwalis Context
 
 See `../kwalis-foundations/CLAUDE.md` for full foundational context. The website content reflects:
