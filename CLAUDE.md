@@ -60,6 +60,12 @@ See `../kwalis-foundations/CLAUDE.md` for full foundational context. The website
 - The problem framing (meaning, not scale)
 - Communication rule: never lead with category theory, lead with the problem
 
+## Commit Convention
+
+Follow [Conventional Commits](https://conventionalcommits.org): `<type>(<scope>): <description>`
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `chore`, `perf`, `test`
+
 ## Notes
 
 - Astro runs in static output mode — no SSR, no `@astrojs/cloudflare` adapter
