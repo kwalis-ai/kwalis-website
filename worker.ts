@@ -1,6 +1,17 @@
 interface Env {
   DB: D1Database;
   ASSETS: Fetcher;
+  TURNSTILE_SECRET: string;
+}
+
+async function verifyTurnstile(token: string, secret: string, ip: string): Promise<boolean> {
+  const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+  });
+  const data = await res.json<{ success: boolean }>();
+  return data.success;
 }
 
 export default {
@@ -25,8 +36,26 @@ export default {
         };
 
         try {
-          const body = await request.json<{ email: string }>();
+          const body = await request.json<{ email: string; token: string }>();
           const email = body.email?.trim().toLowerCase();
+          const token = body.token;
+
+          if (!token) {
+            return new Response(JSON.stringify({ error: 'Verification required' }), {
+              status: 400,
+              headers,
+            });
+          }
+
+          const ip = request.headers.get('CF-Connecting-IP') || '';
+          const valid = await verifyTurnstile(token, env.TURNSTILE_SECRET, ip);
+
+          if (!valid) {
+            return new Response(JSON.stringify({ error: 'Verification failed' }), {
+              status: 403,
+              headers,
+            });
+          }
 
           if (!email || !email.includes('@') || email.length > 320) {
             return new Response(JSON.stringify({ error: 'Invalid email' }), {

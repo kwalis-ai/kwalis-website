@@ -18,6 +18,7 @@
       <span class="button-icon">&rarr;</span>
     </button>
   </form>
+  <div class="cf-turnstile" data-sitekey="0x4AAAAAAChl2EluFWwGeDcU" data-theme="dark" data-size="compact"></div>
   <p class="signup-note">No spam. One email when it matters.</p>
   <p class="signup-error" data-signup-error>Something went wrong. Try again?</p>
   <p class="signup-success" data-signup-success>Thanks — we'll be in touch.</p>
@@ -35,6 +36,13 @@
 
     const data = new FormData(form);
     const email = data.get('email') as string;
+    const token = (window as any).turnstile?.getResponse();
+
+    if (!token) {
+      error.textContent = 'Please wait for verification to complete.';
+      error.style.display = 'block';
+      return;
+    }
 
     button.disabled = true;
     button.querySelector('.button-text')!.textContent = 'Sending...';
@@ -43,7 +51,7 @@
       const res = await fetch('/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token }),
       });
 
       if (!res.ok) throw new Error();
@@ -54,7 +62,9 @@
     } catch {
       button.disabled = false;
       button.querySelector('.button-text')!.textContent = 'Notify me';
+      error.textContent = 'Something went wrong. Try again?';
       error.style.display = 'block';
+      (window as any).turnstile?.reset();
     }
   });
 </script>
